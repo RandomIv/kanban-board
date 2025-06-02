@@ -1,0 +1,31 @@
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #8b93ff;
+}
+
+.header-box {
+  display: flex;
+  align-items: center;
+}
+
+.main-header h1 {
+  padding: 10px 20px;
+  color: #fff7fc;
+}
+
+.btn-container {
+  display: flex;
+  gap: 1.5rem;
+  padding: 15px 20px;
+}
+
+.btn-container a {
+  padding: 7px 20px;
+  background-color: transparent;
+  border: 3px solid #fff7fc;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff7fc;
+}
