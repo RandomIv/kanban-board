@@ -1,3 +1,19 @@
+import Link from 'next/link';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
+import classes from './page.module.css';
+
 export default function Home() {
-  return <h1>Home Page</h1>;
+  return (
+    <div className="container">
+      <h1 className={classes['home-header']}>Create your first kanban!</h1>
+      <div className={classes['link-box']}>
+        <Link href="/" className={classes['add-btn']}>
+          <FontAwesomeIcon icon={faPlus} />
+        </Link>
+      </div>
+    </div>
+  );
 }

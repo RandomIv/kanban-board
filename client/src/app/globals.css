@@ -21,3 +21,8 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.container {
+  width: 80%;
+  margin: auto;
+}
