@@ -1,0 +1,28 @@
+.card-box {
+  margin-bottom: 7px;
+  padding: 5px 7px;
+  border: 1.5px solid;
+  border-radius: 3px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-header input {
+  width: 85%;
+  border: 0;
+}
+
+.card-header input:focus {
+  outline: none;
+  border: none;
+}
+
+.card-header button {
+  margin: 0;
+  border: 0;
+  background-color: transparent;
+  color: rgb(0, 0, 0, 0.3);
+}

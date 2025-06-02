@@ -22,6 +22,10 @@ a {
   text-decoration: none;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 .container {
   width: 80%;
   margin: auto;
