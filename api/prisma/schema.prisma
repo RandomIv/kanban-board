@@ -51,12 +51,13 @@ model List {
 }
 
 model Card {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String?
   position    Int
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  targetDate  DateTime? @map("target_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   listId String @map("list_id")
   list   List   @relation(fields: [listId], references: [id])
