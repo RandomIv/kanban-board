@@ -45,5 +45,21 @@ model List {
   boardId String @map("board_id")
   board   Board  @relation(fields: [boardId], references: [id])
 
+  cards Card[]
+
   @@map("lists")
+}
+
+model Card {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  position    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  listId String @map("list_id")
+  list   List   @relation(fields: [listId], references: [id])
+
+  @@map("cards")
 }
