@@ -30,5 +30,20 @@ model Board {
   ownerId String @map("owner_id")
   owner   User   @relation(fields: [ownerId], references: [id])
 
+  lists List[]
+
   @@map("boards")
+}
+
+model List {
+  id        String   @id @default(cuid(2))
+  title     String
+  position  Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  boardId String @map("board_id")
+  board   Board  @relation(fields: [boardId], references: [id])
+
+  @@map("lists")
 }
