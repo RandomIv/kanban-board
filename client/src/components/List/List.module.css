@@ -1,0 +1,18 @@
+.list {
+  width: 17%;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.list h3 {
+  margin: 12px 15px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid;
+}
+
+.list button {
+  margin: 10px 15px;
+  margin-bottom: 15px;
+  border: 0;
+  background-color: transparent;
+}
