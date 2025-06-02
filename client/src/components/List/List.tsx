@@ -9,6 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import classes from './List.module.css';
 
 import { Card } from '@/types/Card';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   color: string;
@@ -20,18 +21,33 @@ export default function List({ color, title }: Props) {
 
   const addCard = (): void => {
     setCards((prev) => {
-      const now: Date = new Date();
-      const datePart: string = now.toISOString().slice(0, 10).replace(/-/g, '');
-
+      const newId = uuidv4();
       const newCards: Card[] = [
         ...prev,
-        { id: datePart, title: 'something', position: prev.length },
+        { id: newId, title: '', position: prev.length },
       ];
-
-      console.log(newCards);
-
       return newCards;
     });
+  };
+
+  const removeLastCardIfEmpty = (): void => {
+    setCards((prev) => {
+      return prev.slice(0, -1);
+    });
+  };
+
+  const changeCard = (id: string, newTitle?: string, newTargetDate?: Date) => {
+    setCards((prev) =>
+      prev.map((card) =>
+        card.id === id
+          ? {
+              ...card,
+              ...(newTitle !== undefined && { title: newTitle }),
+              ...(newTargetDate !== undefined && { targetDate: newTargetDate }),
+            }
+          : card
+      )
+    );
   };
 
   return (
@@ -39,7 +55,15 @@ export default function List({ color, title }: Props) {
       <h3 style={{ borderColor: color }}>{title}</h3>
       <div className={classes.cards}>
         {cards.map((card, index) => {
-          return <CardItem key={index} color={color} />;
+          return (
+            <CardItem
+              key={index}
+              color={color}
+              data={card}
+              onEmptyBlur={removeLastCardIfEmpty}
+              onChange={changeCard}
+            />
+          );
         })}
       </div>
       <button onClick={addCard}>

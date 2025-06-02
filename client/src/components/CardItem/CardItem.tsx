@@ -1,19 +1,105 @@
+'use client';
+import { useRef, useEffect, useState } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import classes from './CardItem.module.css';
+import CardMenu from './CardMenu';
+
+import { Card } from '@/types/Card';
 
 interface Props {
   color?: string;
+  data: Card;
+  onEmptyBlur: () => void;
+  onChange: (id: string, newTitle?: string, newTargetDate?: Date) => void;
 }
 
-export default function CardItem({ color }: Props) {
+export default function CardItem({
+  color,
+  data,
+  onEmptyBlur,
+  onChange,
+}: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const cardMenuRef = useRef<HTMLDivElement>(null);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        cardMenuRef.current &&
+        !cardMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleBlur = () => {
+    if (inputRef.current && inputRef.current.value.trim() === '') {
+      onEmptyBlur();
+    } else {
+    }
+  };
+
+  const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setShowMenu((prev) => !prev);
+  };
+
+  const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    inputRef.current?.focus();
+    setShowMenu((prev) => !prev);
+  };
+
   return (
-    <div className={classes['card-box']} style={{ borderColor: color }}>
+    <div
+      className={classes['card-box']}
+      style={{ borderColor: color }}
+      onContextMenu={handleRightClick}
+      onDoubleClick={handleDoubleClick}
+    >
       <div className={classes['card-header']}>
-        <input type="text" />
-        <button className={classes['card-box']}>
-          <FontAwesomeIcon icon={faEllipsisVertical} />
-        </button>
+        {showMenu && (
+          <div ref={cardMenuRef}>
+            <CardMenu onChange={(date) => onChange(data.id, undefined, date)} />
+          </div>
+        )}
+
+        <input
+          ref={inputRef}
+          type="text"
+          value={data?.title}
+          onChange={(e) => onChange(data.id, e.target.value)}
+          onMouseDown={(e) => e.preventDefault()}
+          onBlur={handleBlur}
+        />
+        <div className={classes['btn-box']}>
+          <button>
+            <FontAwesomeIcon icon={faChevronUp} />{' '}
+          </button>
+          <button>
+            <FontAwesomeIcon icon={faChevronDown} />
+          </button>
+        </div>
+      </div>
+      <div className={classes['info']}>
+        {data.targetDate && (
+          <span className={classes['date-info']}>
+            {data.targetDate && data.targetDate.toLocaleDateString()}
+          </span>
+        )}
       </div>
     </div>
   );
