@@ -11,7 +11,7 @@
 
 .main-header h1 {
   padding: 10px 20px;
-  color: #fff7fc;
+  color: white;
 }
 
 .btn-container {
@@ -23,9 +23,9 @@
 .btn-container a {
   padding: 7px 20px;
   background-color: transparent;
-  border: 3px solid #fff7fc;
+  border: 3px solid white;
   border-radius: 10px;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #fff7fc;
+  color: white;
 }

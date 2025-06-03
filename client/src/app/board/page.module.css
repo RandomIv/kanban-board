@@ -1,0 +1,15 @@
+.bg-fill {
+  width: 100%;
+  min-height: 90vh;
+  background-color: #f4f4fd;
+  background-image: url('https://www.transparenttextures.com/patterns/climpek.png');
+}
+
+.board {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  max-width: 95%;
+  margin: auto;
+  padding-top: 30px;
+}

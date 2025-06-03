@@ -10,7 +10,7 @@ export default function Home() {
     <div className="container">
       <h1 className={classes['home-header']}>Create your first kanban!</h1>
       <div className={classes['link-box']}>
-        <Link href="/" className={classes['add-btn']}>
+        <Link href="/board" className={classes['add-btn']}>
           <FontAwesomeIcon icon={faPlus} />
         </Link>
       </div>
