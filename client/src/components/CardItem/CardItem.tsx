@@ -14,6 +14,7 @@ interface Props {
   onEmptyBlur: () => void;
   onChange: (newData: CardChange) => void;
   onMove: (id: string, direction: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export default function CardItem({
@@ -22,6 +23,7 @@ export default function CardItem({
   onEmptyBlur,
   onChange,
   onMove,
+  onDelete,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const cardMenuRef = useRef<HTMLDivElement>(null);
@@ -78,6 +80,7 @@ export default function CardItem({
               onChange={(date) =>
                 onChange({ id: data.id, newTargetDate: date })
               }
+              onDelete={() => onDelete(data.id)}
             />
           </div>
         )}

@@ -41,6 +41,10 @@ export default function List({ color, title }: Props) {
     setCards((prev) => moveCardInList(prev, id, direction));
   };
 
+  const deleteCard = (id: string) => {
+    setCards((prev) => prev.filter((card) => card.id !== id));
+  };
+
   return (
     <div className={classes['list']}>
       <h3 style={{ borderColor: color }}>{title}</h3>
@@ -54,6 +58,7 @@ export default function List({ color, title }: Props) {
               onEmptyBlur={removeLastCardIfEmpty}
               onChange={changeCard}
               onMove={moveCard}
+              onDelete={deleteCard}
             />
           );
         })}

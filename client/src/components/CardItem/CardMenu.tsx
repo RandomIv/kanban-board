@@ -2,14 +2,15 @@
 import { useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDays, faTrash } from '@fortawesome/free-solid-svg-icons';
 import classes from './CardItem.module.css';
 
 interface Props {
   onChange: (newTargetDate: Date) => void;
+  onDelete: () => void;
 }
 
-export default function CardMenu({ onChange }: Props) {
+export default function CardMenu({ onChange, onDelete }: Props) {
   const [isDateInput, setIsDateInput] = useState<boolean>(false);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +29,9 @@ export default function CardMenu({ onChange }: Props) {
         }}
       >
         <FontAwesomeIcon icon={faCalendarDays} />
+      </button>
+      <button onClick={onDelete}>
+        <FontAwesomeIcon icon={faTrash} />{' '}
       </button>
       {isDateInput && <input type="date" onChange={handleDateChange} />}
     </div>
