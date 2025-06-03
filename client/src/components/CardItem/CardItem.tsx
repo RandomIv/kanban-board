@@ -1,33 +1,30 @@
 'use client';
 import { useRef, useEffect, useState } from 'react';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import classes from './CardItem.module.css';
 import CardMenu from './CardMenu';
 
 import { Card, CardChange } from '@/types/Card';
+import { useBoardStore } from '@/store/boardStore';
+import { validateChangeCard, moveCardInList } from '@/utils/cardUtils';
 
 interface Props {
+  id: string;
+  listId: string;
   color?: string;
   data: Card;
-  onEmptyBlur: () => void;
-  onChange: (newData: CardChange) => void;
-  onMove: (id: string, direction: string) => void;
-  onDelete: (id: string) => void;
 }
 
-export default function CardItem({
-  color,
-  data,
-  onEmptyBlur,
-  onChange,
-  onMove,
-  onDelete,
-}: Props) {
+export default function CardItem({ id, listId, color, data }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const cardMenuRef = useRef<HTMLDivElement>(null);
   const [showMenu, setShowMenu] = useState<boolean>(false);
+
+  const lists = useBoardStore((state) => state.lists);
+  const updateListCards = useBoardStore((state) => state.updateListCards);
+
+  const cards = lists[listId]?.cards || [];
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -51,19 +48,36 @@ export default function CardItem({
 
   const handleBlur = () => {
     if (inputRef.current && inputRef.current.value.trim() === '') {
-      onEmptyBlur();
+      removeLastCardIfEmpty();
     }
   };
 
-  const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
+  const removeLastCardIfEmpty = () => {
+    const lastCard = cards[cards.length - 1];
+    if (lastCard && lastCard.title.trim() === '') {
+      updateListCards(listId, cards.slice(0, -1));
+    }
+  };
+
+  const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     setShowMenu((prev) => !prev);
   };
 
-  const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
+  const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     inputRef.current?.focus();
     setShowMenu((prev) => !prev);
+  };
+
+  const onChange = (change: CardChange) => {
+    const updatedCards = validateChangeCard(cards, change);
+    updateListCards(listId, updatedCards);
+  };
+
+  const onMove = (cardId: string, direction: string) => {
+    const updatedCards = moveCardInList(cards, cardId, direction);
+    updateListCards(listId, updatedCards);
   };
 
   return (
@@ -77,10 +91,11 @@ export default function CardItem({
         {showMenu && (
           <div ref={cardMenuRef}>
             <CardMenu
+              cardId={id}
+              listId={listId}
               onChange={(date) =>
                 onChange({ id: data.id, newTargetDate: date })
               }
-              onDelete={() => onDelete(data.id)}
             />
           </div>
         )}
@@ -96,10 +111,9 @@ export default function CardItem({
         <div className={classes['btn-box']}>
           {data.position > 0 && (
             <button onClick={() => onMove(data.id, 'up')}>
-              <FontAwesomeIcon icon={faChevronUp} />{' '}
+              <FontAwesomeIcon icon={faChevronUp} />
             </button>
           )}
-
           <button onClick={() => onMove(data.id, 'down')}>
             <FontAwesomeIcon icon={faChevronDown} />
           </button>
@@ -108,7 +122,7 @@ export default function CardItem({
       <div className={classes['info']}>
         {data.targetDate && (
           <span className={classes['date-info']}>
-            {data.targetDate && data.targetDate.toLocaleDateString()}
+            {data.targetDate.toLocaleDateString()}
           </span>
         )}
       </div>
