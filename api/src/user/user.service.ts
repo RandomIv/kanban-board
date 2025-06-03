@@ -54,4 +54,9 @@ export class UserService {
       omit: { password: true },
     });
   }
+  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<void> {
+    await this.prisma.user.delete({
+      where,
+    });
+  }
 }
