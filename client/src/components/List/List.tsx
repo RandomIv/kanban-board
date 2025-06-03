@@ -36,18 +36,50 @@ export default function List({ color, title }: Props) {
     });
   };
 
-  const changeCard = (id: string, newTitle?: string, newTargetDate?: Date) => {
+  const changeCard = (newData: {
+    id: string;
+    newTitle?: string;
+    newTargetDate?: Date;
+  }) => {
     setCards((prev) =>
       prev.map((card) =>
-        card.id === id
+        card.id === newData.id
           ? {
               ...card,
-              ...(newTitle !== undefined && { title: newTitle }),
-              ...(newTargetDate !== undefined && { targetDate: newTargetDate }),
+              ...(newData.newTitle !== undefined && {
+                title: newData.newTitle,
+              }),
+              ...(newData.newTargetDate !== undefined && {
+                targetDate: newData.newTargetDate,
+              }),
             }
           : card
       )
     );
+  };
+
+  const moveCard = (id: string, direction: string) => {
+    setCards((prev) => {
+      const index = prev.findIndex((card) => card.id === id);
+
+      if (index === -1) return prev;
+      if (direction === 'up' && index === 0) return prev;
+      if (direction === 'down' && index === prev.length - 1) return prev;
+
+      const newCards = [...prev];
+      const swapIndex = direction === 'up' ? index - 1 : index + 1;
+
+      [newCards[index], newCards[swapIndex]] = [
+        newCards[swapIndex],
+        newCards[index],
+      ];
+
+      newCards.forEach((card, idx) => {
+        card.position = idx;
+      });
+
+      return newCards;
+    });
   };
 
   return (
@@ -62,6 +94,7 @@ export default function List({ color, title }: Props) {
               data={card}
               onEmptyBlur={removeLastCardIfEmpty}
               onChange={changeCard}
+              onMove={moveCard}
             />
           );
         })}

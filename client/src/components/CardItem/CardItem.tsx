@@ -12,7 +12,12 @@ interface Props {
   color?: string;
   data: Card;
   onEmptyBlur: () => void;
-  onChange: (id: string, newTitle?: string, newTargetDate?: Date) => void;
+  onChange: (newData: {
+    id: string;
+    newTitle?: string;
+    newTargetDate?: Date;
+  }) => void;
+  onMove: (id: string, direction: string) => void;
 }
 
 export default function CardItem({
@@ -20,6 +25,7 @@ export default function CardItem({
   data,
   onEmptyBlur,
   onChange,
+  onMove,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const cardMenuRef = useRef<HTMLDivElement>(null);
@@ -73,7 +79,11 @@ export default function CardItem({
       <div className={classes['card-header']}>
         {showMenu && (
           <div ref={cardMenuRef}>
-            <CardMenu onChange={(date) => onChange(data.id, undefined, date)} />
+            <CardMenu
+              onChange={(date) =>
+                onChange({ id: data.id, newTargetDate: date })
+              }
+            />
           </div>
         )}
 
@@ -81,15 +91,18 @@ export default function CardItem({
           ref={inputRef}
           type="text"
           value={data?.title}
-          onChange={(e) => onChange(data.id, e.target.value)}
+          onChange={(e) => onChange({ id: data.id, newTitle: e.target.value })}
           onMouseDown={(e) => e.preventDefault()}
           onBlur={handleBlur}
         />
         <div className={classes['btn-box']}>
-          <button>
-            <FontAwesomeIcon icon={faChevronUp} />{' '}
-          </button>
-          <button>
+          {data.position > 0 && (
+            <button onClick={() => onMove(data.id, 'up')}>
+              <FontAwesomeIcon icon={faChevronUp} />{' '}
+            </button>
+          )}
+
+          <button onClick={() => onMove(data.id, 'down')}>
             <FontAwesomeIcon icon={faChevronDown} />
           </button>
         </div>
