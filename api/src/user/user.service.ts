@@ -25,4 +25,22 @@ export class UserService {
       omit: { password: true },
     });
   }
+  async findMany(params: {
+    where?: Prisma.UserWhereInput;
+    orderBy?:
+      | Prisma.UserOrderByWithRelationInput
+      | Prisma.UserOrderByWithRelationInput[];
+    take?: number;
+    skip?: number;
+  }): Promise<UserWithoutPassword[]> {
+    const { where, orderBy, take, skip } = params;
+
+    return this.prisma.user.findMany({
+      where,
+      orderBy,
+      take,
+      skip,
+      omit: { password: true },
+    });
+  }
 }
