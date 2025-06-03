@@ -6,17 +6,13 @@ import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import classes from './CardItem.module.css';
 import CardMenu from './CardMenu';
 
-import { Card } from '@/types/Card';
+import { Card, CardChange } from '@/types/Card';
 
 interface Props {
   color?: string;
   data: Card;
   onEmptyBlur: () => void;
-  onChange: (newData: {
-    id: string;
-    newTitle?: string;
-    newTargetDate?: Date;
-  }) => void;
+  onChange: (newData: CardChange) => void;
   onMove: (id: string, direction: string) => void;
 }
 
@@ -54,7 +50,6 @@ export default function CardItem({
   const handleBlur = () => {
     if (inputRef.current && inputRef.current.value.trim() === '') {
       onEmptyBlur();
-    } else {
     }
   };
 

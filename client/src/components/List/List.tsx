@@ -8,8 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import classes from './List.module.css';
 
-import { Card } from '@/types/Card';
-import { v4 as uuidv4 } from 'uuid';
+import { Card, CardChange } from '@/types/Card';
+import {
+  validateChangeCard,
+  moveCardInList,
+  createNewCard,
+} from '@/utils/cardUtils';
 
 interface Props {
   color: string;
@@ -20,14 +24,7 @@ export default function List({ color, title }: Props) {
   const [cards, setCards] = useState<Card[]>([]);
 
   const addCard = (): void => {
-    setCards((prev) => {
-      const newId = uuidv4();
-      const newCards: Card[] = [
-        ...prev,
-        { id: newId, title: '', position: prev.length },
-      ];
-      return newCards;
-    });
+    setCards((prev) => createNewCard(prev));
   };
 
   const removeLastCardIfEmpty = (): void => {
@@ -36,60 +33,22 @@ export default function List({ color, title }: Props) {
     });
   };
 
-  const changeCard = (newData: {
-    id: string;
-    newTitle?: string;
-    newTargetDate?: Date;
-  }) => {
-    setCards((prev) =>
-      prev.map((card) =>
-        card.id === newData.id
-          ? {
-              ...card,
-              ...(newData.newTitle !== undefined && {
-                title: newData.newTitle,
-              }),
-              ...(newData.newTargetDate !== undefined && {
-                targetDate: newData.newTargetDate,
-              }),
-            }
-          : card
-      )
-    );
+  const changeCard = (newData: CardChange) => {
+    setCards((prev) => validateChangeCard(prev, newData));
   };
 
   const moveCard = (id: string, direction: string) => {
-    setCards((prev) => {
-      const index = prev.findIndex((card) => card.id === id);
-
-      if (index === -1) return prev;
-      if (direction === 'up' && index === 0) return prev;
-      if (direction === 'down' && index === prev.length - 1) return prev;
-
-      const newCards = [...prev];
-      const swapIndex = direction === 'up' ? index - 1 : index + 1;
-
-      [newCards[index], newCards[swapIndex]] = [
-        newCards[swapIndex],
-        newCards[index],
-      ];
-
-      newCards.forEach((card, idx) => {
-        card.position = idx;
-      });
-
-      return newCards;
-    });
+    setCards((prev) => moveCardInList(prev, id, direction));
   };
 
   return (
     <div className={classes['list']}>
       <h3 style={{ borderColor: color }}>{title}</h3>
       <div className={classes.cards}>
-        {cards.map((card, index) => {
+        {cards.map((card) => {
           return (
             <CardItem
-              key={index}
+              key={card.id}
               color={color}
               data={card}
               onEmptyBlur={removeLastCardIfEmpty}

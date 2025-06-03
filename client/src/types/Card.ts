@@ -8,4 +8,10 @@ interface Card {
   updatedAt?: Date;
 }
 
-export { type Card };
+interface CardChange {
+  id: string;
+  newTitle?: string;
+  newTargetDate?: Date;
+}
+
+export { type Card, type CardChange };
