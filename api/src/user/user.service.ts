@@ -20,7 +20,7 @@ export class UserService {
   }
   async findOne(
     where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserWithoutPassword> {
+  ): Promise<UserWithoutPassword | null> {
     return this.prisma.user.findUnique({
       where,
       omit: { password: true },
@@ -44,10 +44,11 @@ export class UserService {
       omit: { password: true },
     });
   }
-  async updateUser(
-    where: Prisma.UserWhereUniqueInput,
-    data: UpdateUserDto,
-  ): Promise<UserWithoutPassword> {
+  async updateUser(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: UpdateUserDto;
+  }): Promise<UserWithoutPassword> {
+    const { where, data } = params;
     return this.prisma.user.update({
       where,
       data,
