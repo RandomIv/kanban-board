@@ -21,16 +21,7 @@ export class BoardService {
           create: DEFAULT_BOARD_LISTS,
         },
       },
-      include: {
-        lists: {
-          orderBy: { position: 'asc' },
-          include: {
-            cards: {
-              orderBy: { position: 'asc' },
-            },
-          },
-        },
-      },
+      include: this.getIncludeSortedListsAndCards(),
     });
   }
 
@@ -39,16 +30,7 @@ export class BoardService {
       where: {
         id,
       },
-      include: {
-        lists: {
-          orderBy: { position: 'asc' },
-          include: {
-            cards: {
-              orderBy: { position: 'asc' },
-            },
-          },
-        },
-      },
+      include: this.getIncludeSortedListsAndCards(),
     });
 
     if (!board) {
@@ -59,6 +41,30 @@ export class BoardService {
   }
 
   async update(id: string, updateBoardDto: UpdateBoardDto): Promise<Board> {
+    await this.checkBoardExists(id);
+
+    return this.prisma.board.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateBoardDto,
+      },
+      include: this.getIncludeSortedListsAndCards(),
+    });
+  }
+
+  async delete(id: string): Promise<Board> {
+    await this.checkBoardExists(id);
+
+    return this.prisma.board.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  private async checkBoardExists(id: string): Promise<void> {
     const board = await this.prisma.board.findUnique({
       where: {
         id,
@@ -68,24 +74,18 @@ export class BoardService {
     if (!board) {
       throw new NotFoundException(`Board with Id ${id} not found`);
     }
+  }
 
-    return this.prisma.board.update({
-      where: {
-        id,
-      },
-      data: {
-        ...updateBoardDto,
-      },
-      include: {
-        lists: {
-          orderBy: { position: 'asc' },
-          include: {
-            cards: {
-              orderBy: { position: 'asc' },
-            },
+  private getIncludeSortedListsAndCards() {
+    return {
+      lists: {
+        orderBy: { position: 'asc' },
+        include: {
+          cards: {
+            orderBy: { position: 'asc' },
           },
         },
       },
-    });
+    } as const;
   }
 }

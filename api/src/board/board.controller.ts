@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -36,5 +37,10 @@ export class BoardController {
     @Body() updateBoardDto: UpdateBoardDto,
   ): Promise<Board> {
     return this.boardService.update(id, updateBoardDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<Board> {
+    return this.boardService.delete(id);
   }
 }

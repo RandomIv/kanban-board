@@ -28,7 +28,7 @@ model Board {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   ownerId String @map("owner_id")
-  owner   User   @relation(fields: [ownerId], references: [id])
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   lists List[]
 
@@ -43,7 +43,7 @@ model List {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   boardId String @map("board_id")
-  board   Board  @relation(fields: [boardId], references: [id])
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   cards Card[]
 
@@ -60,7 +60,7 @@ model Card {
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
   listId String @map("list_id")
-  list   List   @relation(fields: [listId], references: [id])
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("cards")
 }
