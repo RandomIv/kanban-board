@@ -3,7 +3,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UserWithoutPassword } from './types/user-nopass.type';
-import { Prisma } from 'generated/prisma';
+import { Prisma, User } from 'generated/prisma';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
@@ -20,10 +20,13 @@ export class UserService {
   }
   async findOne(
     where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserWithoutPassword | null> {
+    options?: { includePassword?: boolean },
+  ): Promise<User | UserWithoutPassword | null> {
+    const includePassword = options?.includePassword ?? false;
+
     return this.prisma.user.findUnique({
       where,
-      omit: { password: true },
+      ...(includePassword ? {} : { omit: { password: true } }),
     });
   }
   async findMany(params: {
