@@ -26,7 +26,32 @@ export class BoardService {
         },
       },
       include: {
-        lists: true,
+        lists: {
+          orderBy: { position: 'asc' },
+          include: {
+            cards: {
+              orderBy: { position: 'asc' },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async findOne(id: string): Promise<Board> {
+    return this.prisma.board.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        lists: {
+          orderBy: { position: 'asc' },
+          include: {
+            cards: {
+              orderBy: { position: 'asc' },
+            },
+          },
+        },
       },
     });
   }

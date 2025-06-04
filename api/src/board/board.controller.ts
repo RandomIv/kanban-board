@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dtos/create-board.dto';
 import { Board } from 'generated/prisma';
@@ -13,5 +13,10 @@ export class BoardController {
   ): Promise<Board> {
     req.user = { id: req.headers['x-user-id'] };
     return this.boardService.create(req.user.id, createBoardDto);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Board> {
+    return this.boardService.findOne(id);
   }
 }
