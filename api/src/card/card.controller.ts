@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -22,5 +23,10 @@ export class CardController {
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Card> {
     return this.cardService.findOne(id);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<Card> {
+    return this.cardService.delete(id);
   }
 }

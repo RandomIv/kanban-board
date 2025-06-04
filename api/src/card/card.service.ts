@@ -40,4 +40,14 @@ export class CardService {
 
     return card;
   }
+
+  async delete(id: string): Promise<Card> {
+    await this.findOne(id);
+
+    return this.prisma.card.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
