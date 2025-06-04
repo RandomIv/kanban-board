@@ -22,7 +22,6 @@ export class BoardController {
     @Req() req,
     @Body() createBoardDto: CreateBoardDto,
   ): Promise<Board> {
-    req.user = { id: req.headers['x-user-id'] };
     return this.boardService.create(req.user.id, createBoardDto);
   }
 
@@ -33,7 +32,6 @@ export class BoardController {
 
   @Get()
   async findManyByUser(@Req() req): Promise<Board[]> {
-    req.user = { id: req.headers['x-user-id'] };
     return this.boardService.findManyByUserId(req.user.id);
   }
 
