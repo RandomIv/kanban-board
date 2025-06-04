@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCardDto } from './dtos/create-card.dto';
 import { Card } from 'generated/prisma';
@@ -25,5 +25,19 @@ export class CardService {
         },
       },
     });
+  }
+
+  async findOne(id: string): Promise<Card> {
+    const card = await this.prisma.card.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!card) {
+      throw new NotFoundException(`Card with Id ${id} not found`);
+    }
+
+    return card;
   }
 }
