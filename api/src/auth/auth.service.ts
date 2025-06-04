@@ -33,6 +33,7 @@ export class AuthService {
     return {
       message: 'User registered successfully',
       accessToken: token,
+      userId: payload.sub,
     };
   }
   async verifyUser(email: string, password: string): Promise<User> {
@@ -62,6 +63,7 @@ export class AuthService {
     return {
       message: 'User login successfully',
       accessToken: token,
+      userId: payload.sub,
     };
   }
 }
