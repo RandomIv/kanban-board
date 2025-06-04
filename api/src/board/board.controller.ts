@@ -7,22 +7,25 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dtos/create-board.dto';
-import { Board } from 'generated/prisma';
+import { Board, User } from 'generated/prisma';
 import { UpdateBoardDto } from './dtos/update-board.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @Controller('boards')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
   @Post()
+  @UseGuards(JwtAuthGuard)
   async create(
-    @Req() req,
+    @CurrentUser() user: User,
     @Body() createBoardDto: CreateBoardDto,
   ): Promise<Board> {
-    return this.boardService.create(req.user.id, createBoardDto);
+    return this.boardService.create(user.id, createBoardDto);
   }
 
   @Get(':id')
@@ -31,8 +34,9 @@ export class BoardController {
   }
 
   @Get()
-  async findManyByUser(@Req() req): Promise<Board[]> {
-    return this.boardService.findManyByUserId(req.user.id);
+  @UseGuards(JwtAuthGuard)
+  async findManyByUser(@CurrentUser() user: User): Promise<Board[]> {
+    return this.boardService.findManyByUserId(user.id);
   }
 
   @Patch(':id')
