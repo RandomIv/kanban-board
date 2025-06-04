@@ -31,6 +31,12 @@ export class BoardController {
     return this.boardService.findOne(id);
   }
 
+  @Get()
+  async findManyByUser(@Req() req): Promise<Board[]> {
+    req.user = { id: req.headers['x-user-id'] };
+    return this.boardService.findManyByUserId(req.user.id);
+  }
+
   @Patch(':id')
   async update(
     @Param('id', ParseUUIDPipe) id: string,

@@ -40,6 +40,17 @@ export class BoardService {
     return board;
   }
 
+  async findManyByUserId(userId: string): Promise<Board[]> {
+    return this.prisma.board.findMany({
+      where: {
+        owner: {
+          id: userId,
+        },
+      },
+      include: this.getIncludeSortedListsAndCards(),
+    });
+  }
+
   async update(id: string, updateBoardDto: UpdateBoardDto): Promise<Board> {
     await this.checkBoardExists(id);
 
