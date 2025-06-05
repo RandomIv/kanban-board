@@ -10,6 +10,7 @@ import {
 import classes from './CardItem.module.css';
 
 import { deleteCard, moveCardToList } from '@/utils/cardUtils';
+import { deleteCard as deleteCardReq } from '@/lib/api/card';
 
 interface Props {
   cardId: string;
@@ -27,12 +28,17 @@ export default function CardMenu({ cardId, listId, onChange }: Props) {
     }
   };
 
+  const handleDelete = () => {
+    deleteCard(listId, cardId);
+    deleteCardReq(cardId);
+  };
+
   return (
     <div className={classes['card-menu']}>
       <button onClick={() => setIsDateInput((prev) => !prev)}>
         <FontAwesomeIcon icon={faCalendarDays} />
       </button>
-      <button onClick={() => deleteCard(listId, cardId)}>
+      <button onClick={handleDelete}>
         <FontAwesomeIcon icon={faTrash} />
       </button>
       <button onClick={() => moveCardToList(listId, cardId, 'left')}>

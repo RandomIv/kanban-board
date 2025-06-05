@@ -2,12 +2,14 @@
 import { useRef, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+
 import classes from './CardItem.module.css';
 import CardMenu from './CardMenu';
 
 import { Card, CardChange } from '@/types/Card';
 import { useBoardStore } from '@/store/boardStore';
 import { validateChangeCard, moveCardInList } from '@/utils/cardUtils';
+import { createCard } from '@/lib/api/card';
 
 interface Props {
   id: string;
@@ -46,9 +48,28 @@ export default function CardItem({ id, listId, color, data }: Props) {
     };
   }, []);
 
-  const handleBlur = () => {
-    if (inputRef.current && inputRef.current.value.trim() === '') {
+  const handleBlur = async () => {
+    const inputValue = inputRef.current?.value.trim();
+
+    if (!inputValue) {
       removeLastCardIfEmpty();
+      return;
+    }
+
+    const lastCard = cards[cards.length - 1];
+
+    if (lastCard && lastCard.id.startsWith('temp-')) {
+      try {
+        const created = await createCard(inputValue, listId);
+        const updatedCards = [
+          ...cards.slice(0, -1),
+          { ...lastCard, id: created.id, title: inputValue },
+        ];
+        updateListCards(listId, updatedCards);
+      } catch (err) {
+        console.error('Failed to create card:', err);
+        updateListCards(listId, cards.slice(0, -1));
+      }
     }
   };
 

@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { Card } from '@/types/Card';
-
-interface List {
-  id: string;
-  title: string;
-  color: string;
-  cards: Card[];
-}
+import { List } from '@/types/List';
+import { Board } from '@/types/Board';
 
 interface BoardState {
+  board?: Board;
   lists: Record<string, List>;
+  boardState: string;
+
+  setBoardData: (board: Board) => void;
   setLists: (newLists: Record<string, List>) => void;
+  setBoardState: (boardState: string) => void;
   moveCardToAnotherList: (
     fromListId: string,
     toListId: string,
@@ -20,9 +20,15 @@ interface BoardState {
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
+  board: undefined,
   lists: {},
+  boardState: 'up-to-date',
+
+  setBoardData: (board) => set({ board }),
 
   setLists: (newLists) => set({ lists: newLists }),
+
+  setBoardState: (newBoardState) => set({ boardState: newBoardState }),
 
   moveCardToAnotherList: (fromListId, toListId, cardId) =>
     set((state) => {

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+
 import './globals.css';
 import '../lib/fontawesome';
 
 import MainHeader from '../components/MainHeader/MainHeader';
+import Providers from '@/components/Providers';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -17,14 +19,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <MainHeader></MainHeader>
-        {children}
+        <MainHeader />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
