@@ -6,7 +6,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import classes from './List.module.css';
 
 import { createNewCard } from '@/utils/cardUtils';
-import { List as ListProps } from '@/types/List';
+import { ListItem as ListProps } from '@/types/List';
 
 export default function List({ id, color, title, cards }: ListProps) {
   const addCard = () => {

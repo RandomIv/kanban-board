@@ -25,62 +25,47 @@ const fetchBoardData = async (boardId: string) => {
   const setBoardData = useBoardStore.getState().setBoardData;
   const setLists = useBoardStore.getState().setLists;
 
-  try {
-    const res = await fetch(`http://localhost:5006/api/boards/${boardId}`);
-    if (!res.ok) throw new Error('Board not found');
+  const res = await fetch(`http://localhost:5006/api/boards/${boardId}`);
+  if (!res.ok) throw new Error('Board not found');
 
-    const data = await res.json();
+  const data = await res.json();
 
-    console.log(data);
+  setBoardData({
+    id: data.id,
+    title: data.title,
+    description: data.description,
+    ownerId: data.ownerId,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    lists: data.lists,
+  });
 
-    setBoardData({
-      id: data.id,
-      title: data.title,
-      description: data.description,
-      ownerId: data.ownerId,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-      lists: data.lists,
-    });
+  const listMap: Record<string, List> = {};
+  data.lists.forEach((list: List, index: number) => {
+    listMap[list.id] = {
+      ...list,
+      color: colors[index % colors.length],
+    };
+  });
 
-    const listMap: Record<string, List> = {};
-    data.lists.forEach((list: List, index: number) => {
-      listMap[list.id] = {
-        ...list,
-        color: colors[index % colors.length],
-      };
-    });
-
-    setLists(listMap);
-    return { status: 'ok' };
-  } catch (err) {
-    const error = err instanceof Error ? err.message : 'Unknown error';
-    return { status: 'error', error };
-  }
+  setLists(listMap);
+  return { status: 'ok' };
 };
 
 const fetchUserBoards = async () => {
   const token = localStorage.getItem('token');
+  const res = await fetch('http://localhost:5006/api/boards', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-  try {
-    const res = await fetch('http://localhost:5006/api/boards', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error('Cannot fetch your boards');
+  if (!res.ok) throw new Error('Cannot fetch your boards');
 
-    const data = await res.json();
-
-    console.log(data);
-
-    return { status: 'ok', data };
-  } catch (err) {
-    const error = err instanceof Error ? err.message : 'Unknown error';
-    return { status: 'error', error };
-  }
+  const data = await res.json();
+  return data;
 };
 
 export { createNewBoard, fetchBoardData, fetchUserBoards };

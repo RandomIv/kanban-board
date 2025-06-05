@@ -11,4 +11,11 @@ interface List {
   color: string;
 }
 
-export { type List };
+interface ListItem {
+  id: string;
+  title: string;
+  color: string;
+  cards: Card[];
+}
+
+export { type List, type ListItem };

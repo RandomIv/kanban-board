@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+
+import { fetchBoardData } from '@/lib/api/board';
 import { useBoardStore } from '@/store/boardStore';
 import List from '@/components/List/List';
 import classes from './page.module.css';
-import { useParams } from 'next/navigation';
-import { fetchBoardData } from '@/lib/api/board';
+import MessageBox from '@/components/MessageBox/MessageBox';
 
 export default function BoardPage() {
   const params = useParams();
@@ -14,24 +16,19 @@ export default function BoardPage() {
   const board = useBoardStore((state) => state.board);
   const lists = useBoardStore((state) => state.lists);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const { isLoading, isError, error } = useQuery({
+    queryKey: ['board', boardId],
+    queryFn: () => fetchBoardData(boardId),
+    refetchOnWindowFocus: false,
+  });
 
-  useEffect(() => {
-    const getData = async () => {
-      const res = await fetchBoardData(boardId);
-      if ((res.status = 'ok')) {
-        setLoading(false);
-      } else {
-        setError(res.error);
-      }
-    };
-
-    getData();
-  }, [boardId]);
-
-  if (loading) return <p className={classes['loading']}>Loading...</p>;
-  if (error) return <p className={classes['error']}>{error}</p>;
+  if (isLoading) return <MessageBox>Loading...</MessageBox>;
+  if (isError)
+    return (
+      <MessageBox type="error">
+        Error: {(error as Error).message || 'Failed to load board'}
+      </MessageBox>
+    );
 
   return (
     <div className={classes['bg-fill']}>
