@@ -2,6 +2,7 @@ import { useBoardStore } from '@/store/boardStore';
 import { List } from '@/types/List';
 
 const colors = ['#31363F', '#FF9F00', '#F4631E', '#309898'];
+const setBoardState = useBoardStore.getState().setBoardState;
 
 const createNewBoard = async (title: string | undefined) => {
   const token = localStorage.getItem('token');
@@ -54,6 +55,7 @@ const fetchBoardData = async (boardId: string) => {
 
 const fetchUserBoards = async () => {
   const token = localStorage.getItem('token');
+
   const res = await fetch('http://localhost:5006/api/boards', {
     method: 'GET',
     headers: {
@@ -87,6 +89,8 @@ const changeBoard = async (boardId: string, newTitle: string) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No auth token');
 
+  setBoardState('fetching');
+
   const res = await fetch(`http://localhost:5006/api/boards/${boardId}`, {
     method: 'PATCH',
     headers: {
@@ -96,7 +100,12 @@ const changeBoard = async (boardId: string, newTitle: string) => {
     body: JSON.stringify({ title: newTitle }),
   });
 
-  if (!res.ok) throw new Error('Failed to create board');
+  if (!res.ok) {
+    setBoardState('error');
+    throw new Error('Failed to create board');
+  } else {
+    setBoardState('up-to-date');
+  }
 
   return await res.json();
 };

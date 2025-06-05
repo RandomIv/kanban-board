@@ -7,7 +7,12 @@ import List from '@/components/List/List';
 import MessageBox from '@/components/MessageBox/MessageBox';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTrash,
+  faCheck,
+  faSpinner,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import classes from './page.module.css';
 
 import { changeBoard, deleteBoard, fetchBoardData } from '@/lib/api/board';
@@ -18,16 +23,17 @@ export default function BoardPage() {
   const router = useRouter();
   const params = useParams();
   const boardId = params?.boardSlug as string;
+  const [isHovered, setIsHovered] = useState(false);
 
   const board = useBoardStore((state) => state.board);
   const lists = useBoardStore((state) => state.lists);
 
   const [newTitle, setNewTitle] = useState<string>(board?.title ?? '');
 
-  console.log(board?.title);
-
   const date = new Date(board?.updatedAt ?? Date.now());
   const formattedDate = date.toLocaleString();
+
+  const boardState = useBoardStore((state) => state.boardState);
 
   useEffect(() => {
     if (board?.title) {
@@ -68,6 +74,14 @@ export default function BoardPage() {
     if (confirmDelete) deleteBoardMutate();
   };
 
+  let icon;
+
+  if (boardState === 'up-to-date') icon = faCheck;
+
+  if (boardState === 'fetching') icon = faSpinner;
+
+  if (boardState === 'error') icon = faXmark;
+
   if (isLoading) return <MessageBox>Loading...</MessageBox>;
   if (isError)
     return (
@@ -94,6 +108,16 @@ export default function BoardPage() {
         </div>
 
         <div className={classes['date-delete-box']}>
+          <div
+            className={classes['state-icon']}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <FontAwesomeIcon icon={icon || faCheck} />
+            {isHovered && (
+              <span className={classes['state-tooltip']}>{boardState}</span>
+            )}
+          </div>
           <span>{formattedDate}</span>
           <button onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? 'Deleting...' : <FontAwesomeIcon icon={faTrash} />}

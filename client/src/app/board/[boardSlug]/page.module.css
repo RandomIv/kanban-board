@@ -52,6 +52,25 @@
   border: none;
 }
 
+.state-icon {
+  position: relative;
+  font-size: 1.5rem;
+}
+
+.state-tooltip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateX(-50%);
+  background: #8b93ff8a;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
 .date-delete-box {
   display: flex;
   gap: 20px;

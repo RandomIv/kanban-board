@@ -1,6 +1,12 @@
+import { useBoardStore } from '@/store/boardStore';
+
+const setBoardState = useBoardStore.getState().setBoardState;
+
 const createCard = async (title: string, listId: string) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No auth token');
+
+  setBoardState('fetching');
 
   const res = await fetch('http://localhost:5006/api/cards', {
     method: 'POST',
@@ -11,15 +17,21 @@ const createCard = async (title: string, listId: string) => {
     body: JSON.stringify({ title, listId }),
   });
 
-  console.log(res);
-
-  if (!res.ok) throw new Error('Failed to create board');
+  if (!res.ok) {
+    setBoardState('error');
+    throw new Error('Failed to create board');
+  } else {
+    setBoardState('up-to-date');
+  }
 
   return await res.json();
 };
 
 const deleteCard = async (cardId: string) => {
   const token = localStorage.getItem('token');
+
+  setBoardState('fetching');
+
   const res = await fetch(`http://localhost:5006/api/cards/${cardId}`, {
     method: 'DELETE',
     headers: {
@@ -28,7 +40,12 @@ const deleteCard = async (cardId: string) => {
     },
   });
 
-  if (!res.ok) throw new Error('Cannot delete your card');
+  if (!res.ok) {
+    setBoardState('error');
+    throw new Error('Cannot delete your card');
+  } else {
+    setBoardState('up-to-date');
+  }
 
   return { status: 'ok' };
 };
