@@ -1,0 +1,39 @@
+.board-title,
+.error-box,
+.create-btn {
+  display: flex;
+  justify-content: center;
+}
+
+.board-title input {
+  margin-top: 20px;
+  margin-bottom: 15px;
+
+  padding: 5px 7px;
+  width: 30%;
+  border: 1.5px solid #8b93ff;
+  border-radius: 5px;
+}
+
+.create-btn {
+  margin-bottom: 20px;
+}
+
+.create-btn button {
+  padding: 7px 15px;
+  background-color: #8b93ff;
+  border: 0;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.error-box {
+  margin-bottom: 15px;
+}
+
+.error-box span {
+  padding: 5px;
+  background-color: #f7a8c4;
+  border-radius: 5px;
+}

@@ -9,9 +9,9 @@ const createNewCard = (listId: string) => {
   const list = lists[listId];
   if (!list) return;
 
-  const newCardId = uuidv4();
+  const tempId = `temp-${uuidv4()}`;
   const newCard: Card = {
-    id: newCardId,
+    id: tempId,
     title: '',
     position: list.cards.length,
   };

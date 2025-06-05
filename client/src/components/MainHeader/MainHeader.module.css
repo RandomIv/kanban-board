@@ -20,7 +20,8 @@
   padding: 15px 20px;
 }
 
-.btn-container a {
+.btn-container a,
+.btn-container button {
   padding: 7px 20px;
   background-color: transparent;
   border: 3px solid white;
