@@ -18,4 +18,19 @@ const createCard = async (title: string, listId: string) => {
   return await res.json();
 };
 
-export { createCard };
+const deleteCard = async (cardId: string) => {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`http://localhost:5006/api/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error('Cannot delete your card');
+
+  return { status: 'ok' };
+};
+
+export { createCard, deleteCard };
