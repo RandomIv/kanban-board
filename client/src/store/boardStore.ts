@@ -1,17 +1,7 @@
 import { create } from 'zustand';
 import { Card } from '@/types/Card';
-
-interface List {
-  id: string;
-  title: string;
-  color: string;
-  cards: Card[];
-}
-
-interface Board {
-  id: string;
-  title: string;
-}
+import { List } from '@/types/List';
+import { Board } from '@/types/Board';
 
 interface BoardState {
   board?: Board;

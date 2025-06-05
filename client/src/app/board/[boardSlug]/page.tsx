@@ -20,7 +20,7 @@ export default function BoardPage() {
   useEffect(() => {
     const getData = async () => {
       const res = await fetchBoardData(boardId);
-      if ((res.state = 'ok')) {
+      if ((res.status = 'ok')) {
         setLoading(false);
       } else {
         setError(res.error);

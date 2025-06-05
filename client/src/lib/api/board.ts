@@ -31,22 +31,56 @@ const fetchBoardData = async (boardId: string) => {
 
     const data = await res.json();
 
-    setBoardData({ id: data.id, title: data.title });
+    console.log(data);
+
+    setBoardData({
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      ownerId: data.ownerId,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      lists: data.lists,
+    });
 
     const listMap: Record<string, List> = {};
     data.lists.forEach((list: List, index: number) => {
       listMap[list.id] = {
         ...list,
-        color: colors[index % colors.length], // по колу, якщо більше 4 списків
+        color: colors[index % colors.length],
       };
     });
 
     setLists(listMap);
-    return { state: 'ok' };
+    return { status: 'ok' };
   } catch (err) {
     const error = err instanceof Error ? err.message : 'Unknown error';
-    return { state: 'error', error };
+    return { status: 'error', error };
   }
 };
 
-export { createNewBoard, fetchBoardData };
+const fetchUserBoards = async () => {
+  const token = localStorage.getItem('token');
+
+  try {
+    const res = await fetch('http://localhost:5006/api/boards', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error('Cannot fetch your boards');
+
+    const data = await res.json();
+
+    console.log(data);
+
+    return { status: 'ok', data };
+  } catch (err) {
+    const error = err instanceof Error ? err.message : 'Unknown error';
+    return { status: 'error', error };
+  }
+};
+
+export { createNewBoard, fetchBoardData, fetchUserBoards };

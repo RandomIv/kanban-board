@@ -1,0 +1,27 @@
+.board-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin: auto;
+  margin-bottom: 20px;
+  width: 80%;
+  background-color: white;
+  border: 2px solid #8b93ff;
+  border-radius: 10px;
+}
+
+.board-item:first-of-type {
+  margin-top: 20px;
+}
+
+.date-box {
+  display: flex;
+  gap: 15px;
+}
+
+.date-box button {
+  background-color: transparent;
+  border: 0;
+  font-size: 1rem;
+  color: #888ff893;
+}
