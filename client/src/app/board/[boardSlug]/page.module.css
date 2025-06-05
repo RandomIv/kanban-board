@@ -11,5 +11,10 @@
   gap: 10px;
   max-width: 95%;
   margin: auto;
-  padding-top: 30px;
+  padding-top: 20px;
+}
+
+.board-title {
+  padding-top: 20px;
+  text-align: center;
 }

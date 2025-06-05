@@ -8,8 +8,16 @@ interface List {
   cards: Card[];
 }
 
+interface Board {
+  id: string;
+  title: string;
+}
+
 interface BoardState {
+  board?: Board;
   lists: Record<string, List>;
+
+  setBoardData: (board: Board) => void;
   setLists: (newLists: Record<string, List>) => void;
   moveCardToAnotherList: (
     fromListId: string,
@@ -20,7 +28,10 @@ interface BoardState {
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
+  board: undefined,
   lists: {},
+
+  setBoardData: (board) => set({ board }),
 
   setLists: (newLists) => set({ lists: newLists }),
 

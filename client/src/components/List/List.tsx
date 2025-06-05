@@ -5,17 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import classes from './List.module.css';
 
-import { Card } from '@/types/Card';
 import { createNewCard } from '@/utils/cardUtils';
+import { List as ListProps } from '@/types/List';
 
-interface Props {
-  id: string;
-  title: string;
-  color: string;
-  cards: Card[];
-}
-
-export default function List({ id, color, title, cards }: Props) {
+export default function List({ id, color, title, cards }: ListProps) {
   const addCard = () => {
     createNewCard(id);
   };
