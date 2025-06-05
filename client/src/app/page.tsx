@@ -25,7 +25,6 @@ export default function Home() {
   } = useQuery<Board[]>({
     queryKey: ['userBoards'],
     queryFn: fetchUserBoards,
-    refetchOnWindowFocus: false,
   });
 
   return (

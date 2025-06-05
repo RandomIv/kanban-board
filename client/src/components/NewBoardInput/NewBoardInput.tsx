@@ -38,7 +38,7 @@ export default function NewBoardInput() {
           <span>{errorText}</span>
         </div>
       )}
-      <div className={classes['board-title']}>
+      <div className={classes['create-btn']}>
         <button onClick={handleCreateBoard}>Create</button>
       </div>
     </>

@@ -68,4 +68,19 @@ const fetchUserBoards = async () => {
   return data;
 };
 
-export { createNewBoard, fetchBoardData, fetchUserBoards };
+const deleteBoard = async (boardId: string) => {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`http://localhost:5006/api/boards/${boardId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error('Cannot fetch your boards');
+
+  return { status: 'ok' };
+};
+
+export { createNewBoard, fetchBoardData, fetchUserBoards, deleteBoard };

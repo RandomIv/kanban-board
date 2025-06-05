@@ -1,5 +1,6 @@
 .board-title,
-.error-box {
+.error-box,
+.create-btn {
   display: flex;
   justify-content: center;
 }
@@ -14,7 +15,11 @@
   border-radius: 5px;
 }
 
-.board-title button {
+.create-btn {
+  margin-bottom: 20px;
+}
+
+.create-btn button {
   padding: 7px 15px;
   background-color: #8b93ff;
   border: 0;

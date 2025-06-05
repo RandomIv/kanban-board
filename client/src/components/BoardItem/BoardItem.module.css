@@ -14,6 +14,10 @@
   margin-top: 20px;
 }
 
+.board-item:hover {
+  cursor: pointer;
+}
+
 .date-box {
   display: flex;
   gap: 15px;
