@@ -5,6 +5,7 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateCardDto {
   @IsNotEmpty()
@@ -16,6 +17,7 @@ export class CreateCardDto {
   description?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   targetDate?: Date;
 

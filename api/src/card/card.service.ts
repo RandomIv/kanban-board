@@ -42,12 +42,28 @@ export class CardService {
   }
 
   async delete(id: string): Promise<Card> {
-    await this.findOne(id);
+    const { listId, position } = await this.findOne(id);
 
-    return this.prisma.card.delete({
-      where: {
-        id,
-      },
+    return this.prisma.$transaction(async (tx) => {
+      const deletedCard = await tx.card.delete({
+        where: { id },
+      });
+
+      await tx.card.updateMany({
+        where: {
+          listId,
+          position: {
+            gt: position,
+          },
+        },
+        data: {
+          position: {
+            decrement: 1,
+          },
+        },
+      });
+
+      return deletedCard;
     });
   }
 }
