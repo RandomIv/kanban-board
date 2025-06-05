@@ -83,4 +83,28 @@ const deleteBoard = async (boardId: string) => {
   return { status: 'ok' };
 };
 
-export { createNewBoard, fetchBoardData, fetchUserBoards, deleteBoard };
+const changeBoard = async (boardId: string, newTitle: string) => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No auth token');
+
+  const res = await fetch(`http://localhost:5006/api/boards/${boardId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title: newTitle }),
+  });
+
+  if (!res.ok) throw new Error('Failed to create board');
+
+  return await res.json();
+};
+
+export {
+  createNewBoard,
+  fetchBoardData,
+  fetchUserBoards,
+  deleteBoard,
+  changeBoard,
+};

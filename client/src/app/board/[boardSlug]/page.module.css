@@ -35,6 +35,23 @@
   color: #888ff893;
 }
 
+.board-title {
+  display: flex;
+  gap: 20px;
+}
+
+.board-title input {
+  border: 0;
+  background-color: transparent;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.board-title input:focus {
+  outline: none;
+  border: none;
+}
+
 .date-delete-box {
   display: flex;
   gap: 20px;

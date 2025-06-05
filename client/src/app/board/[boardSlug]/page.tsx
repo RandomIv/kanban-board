@@ -10,8 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import classes from './page.module.css';
 
-import { deleteBoard, fetchBoardData } from '@/lib/api/board';
+import { changeBoard, deleteBoard, fetchBoardData } from '@/lib/api/board';
 import { useBoardStore } from '@/store/boardStore';
+import { useEffect, useState } from 'react';
 
 export default function BoardPage() {
   const router = useRouter();
@@ -21,8 +22,18 @@ export default function BoardPage() {
   const board = useBoardStore((state) => state.board);
   const lists = useBoardStore((state) => state.lists);
 
+  const [newTitle, setNewTitle] = useState<string>(board?.title ?? '');
+
+  console.log(board?.title);
+
   const date = new Date(board?.updatedAt ?? Date.now());
-  const formattedDate = date.toLocaleDateString();
+  const formattedDate = date.toLocaleString();
+
+  useEffect(() => {
+    if (board?.title) {
+      setNewTitle(board.title);
+    }
+  }, [board?.title]);
 
   const { isLoading, isError, error } = useQuery({
     queryKey: ['board', boardId],
@@ -38,6 +49,15 @@ export default function BoardPage() {
     onError: (error: unknown) => {
       const err = error as Error;
       alert(`Failed to delete board: ${err.message}`);
+    },
+  });
+
+  const { mutate: changeTitleMutate } = useMutation({
+    mutationFn: () => changeBoard(boardId, newTitle),
+    onSuccess: () => {},
+    onError: (error: unknown) => {
+      const err = error as Error;
+      alert(`Failed to change board title: ${err.message}`);
     },
   });
 
@@ -59,7 +79,20 @@ export default function BoardPage() {
   return (
     <div className={classes['bg-fill']}>
       <div className={classes['board-header']}>
-        <h1>{board?.title}</h1>
+        <div className={classes['board-title']}>
+          <input
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            onBlur={() => {
+              if (newTitle.trim() !== board?.title) {
+                changeTitleMutate();
+              }
+            }}
+            className={classes['board-title-input']}
+          />
+        </div>
+
         <div className={classes['date-delete-box']}>
           <span>{formattedDate}</span>
           <button onClick={handleDelete} disabled={isDeleting}>
