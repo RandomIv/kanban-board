@@ -5,6 +5,7 @@ import {
   deleteBoard,
   changeBoard,
 } from '../api/board';
+import { apiUrl } from '@/utils/api';
 
 global.fetch = jest.fn();
 
@@ -29,13 +30,13 @@ describe('API Board functions', () => {
 
     const result = await createNewBoard('Test board');
     expect(fetch).toHaveBeenCalledWith(
-      'http://localhost:5006/api/boards',
+      apiUrl('/boards'),
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
           Authorization: `Bearer ${mockToken}`,
         }),
-      })
+      }),
     );
     expect(result).toHaveProperty('title', 'Test board');
   });
@@ -48,7 +49,7 @@ describe('API Board functions', () => {
   it('should handle board fetch failure', async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
     await expect(fetchBoardData('nonexistent')).rejects.toThrow(
-      'Board not found'
+      'Board not found',
     );
   });
 
@@ -81,13 +82,13 @@ describe('API Board functions', () => {
     const result = await fetchUserBoards();
 
     expect(fetch).toHaveBeenCalledWith(
-      'http://localhost:5006/api/boards',
+      apiUrl('/boards'),
       expect.objectContaining({
         method: 'GET',
         headers: expect.objectContaining({
           Authorization: `Bearer ${mockToken}`,
         }),
-      })
+      }),
     );
 
     expect(result).toEqual(mockBoards);
