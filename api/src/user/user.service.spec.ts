@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { User } from 'generated/prisma';
+
 import { Prisma } from 'generated/prisma';
 import { UserWithoutPassword } from './types/user-nopass.type';
 import { UpdateUserDto } from './dtos/update-user.dto';
