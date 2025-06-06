@@ -1,8 +1,10 @@
 # 🗂️ Kanban Board
 
 Цей додаток допомагає ефективно організовувати робочі процеси та забезпечує зручний візуальний контроль за виконанням завдань. Завдяки інтуїтивному інтерфейсу та продуманій архітектурі він стане надійним помічником у щоденній роботі.
+
 Повноцінний Kanban-додаток з бекендом на NestJS, фронтендом на Next.js та базою даних PostgreSQL. Усі сервіси контейнеризовані за допомогою Docker для зручного розгортання та стабільної роботи.
-### Детальніше можна ознайомитися [тут](https://drive.google.com/file/d/1lZp22OFRO0y8NkiLO7UQv7TXScBntG2b/view)
+
+📄 Детальніше можна ознайомитися [тут](https://drive.google.com/file/d/1lZp22OFRO0y8NkiLO7UQv7TXScBntG2b/view)
 
 ---
 
@@ -12,75 +14,99 @@
 - 🚀 **Backend**: NestJS + TypeScript
 - 🛢️ **Database**: PostgreSQL
 - 📚 **ORM**: Prisma
-- 🐳 **Docker**: для всіх сервісів
+- 🐳 **Containerization**: Docker + Docker Compose
 
 ---
 
 ## 📁 Структура проекту
 
 ```
+
 kanban-board/
-├── api/                    # NestJS backend
-│   ├── Dockerfile
-│   └── prisma/
-│       └── schema.prisma
-├── client/                 # Next.js frontend
-│   ├── Dockerfile
+├── api/                      # NestJS backend
+│   ├── src/
+│   ├── prisma/
+│   │   └── schema.prisma
+│   └── Dockerfile
+│
+├── client/                   # Next.js frontend
+│   ├── src/
+│   └── Dockerfile
+│
 ├── docker-compose.yml
 └── README.md
-```
+
+````
 
 ---
 
 ## 🚀 Швидкий старт
 
-> Переконайтеся, що встановлено Docker та Docker Compose.
+> Переконайтесь, що встановлено `Docker` та `Docker Compose`.
 
-### 1. Клонування репозиторію
+### 1. Клонувати репозиторій
 
 ```bash
 git clone https://github.com/RandomIv/kanban-board.git
 cd kanban-board
+````
+
+### 2. Створити `.env` файли з шаблонів
+### 📂 `api/.env`
+
+```env
+PORT=
+
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_DB=
+
+DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+
+JWT_SECRET=
+JWT_EXPIRATION=
 ```
 
-### 2. Запуск
+---
+
+### 📂 `client/.env`
+
+```env
+NEXT_PUBLIC_API_URL=
+```
+
+
+---
+
+
+🔐 Внесіть свої значення у `.env` файли.
+
+### 3. Запустити проєкт
 
 ```bash
 docker-compose up --build
 ```
 
-### 3. Міграція (тільки для першого запуску)
-
-```bash
-docker-compose exec api npx prisma migrate deploy
-```
+✅ Prisma автоматично застосує всі міграції при запуску `api`.
 
 ---
 
-## 🔗 URL-адреси
+## 🔗 URL-адреси за замовчуванням
 
-- 🖥️ **Frontend (Next.js)**: http://localhost:3000
-- 🔌 **Backend (NestJS API)**: http://localhost:5000
-- 🛢️ **PostgreSQL**: доступний на `localhost:5432`
-
----
-
-## ⚙️ Змінні середовища
-
-Файл `docker-compose.yml` вже містить усі змінні:
-
-| Назва | Значення |
-|-------|----------|
-| `POSTGRES_DB` | `nestjs_db` |
-| `POSTGRES_USER` | `nestjs_user` |
-| `POSTGRES_PASSWORD` | `password_secure` |
-| `DATABASE_URL` | `postgresql://nestjs_user:password_secure@db:5432/nestjs_db` |
+| Сервіс                    | URL                                            |
+| ------------------------- | ---------------------------------------------- |
+| 🖥️ Frontend (Next.js)    | [http://localhost:3000](http://localhost:3000) |
+| 🔌 Backend (NestJS API)   | [http://localhost:5006](http://localhost:5006) |
+| 🛢️ PostgreSQL (в docker) | localhost:5432                                 |
 
 ---
 
-## 🧠 Prisma (корисні команди)
 
-Виконуються всередині контейнера `api`:
+## 🧠 Prisma (ручне використання при потребі)
+
+> Виконується у контейнері `api`.
 
 ### 🔄 Генерація клієнта
 
@@ -94,20 +120,8 @@ docker-compose exec api npx prisma generate
 docker-compose exec api npx prisma migrate dev --name init
 ```
 
-### 📊 Prisma Studio
+### 🌱 Відкриття Prisma Studio
 
 ```bash
 docker-compose exec api npx prisma studio
 ```
-
----
-
-## 📄 Ліцензія
-
-MIT License © 2025 RandomIv
-
----
-
-## 🙋 Підтримка
-
-Якщо маєте питання чи пропозиції — створіть Issue.
