@@ -1,21 +1,16 @@
 'use client';
 import Link from 'next/link';
 import classes from './MainHeader.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useAuthStore } from '@/store/authStore';
 
 export default function MainHeader() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated, logout, loadToken } = useAuthStore();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    loadToken();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    window.location.href = '/';
-  };
   return (
     <div className={classes['main-header']}>
       <div className={classes['header-box']}>
@@ -24,10 +19,10 @@ export default function MainHeader() {
         </Link>
       </div>
       <div className={classes['btn-container']}>
-        {isLoggedIn ? (
-          <button onClick={handleLogout} className={classes['logout-btn']}>
-            Logout
-          </button>
+        {isAuthenticated ? (
+          <>
+            <button onClick={logout}>Logout</button>
+          </>
         ) : (
           <>
             <Link href="/register">Sign up</Link>
