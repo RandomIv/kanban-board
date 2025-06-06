@@ -1,15 +1,21 @@
 'use client';
 import Link from 'next/link';
 import classes from './MainHeader.module.css';
+import { useEffect, useState } from 'react';
 
 export default function MainHeader() {
-  const handleLogin = () => {
-    localStorage.setItem(
-      'token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmZjBlMzRmZS03MDA4LTQwZDgtOWQ5ZC04MzU5Y2RjNmYyODEiLCJpYXQiOjE3NDkxMTU3OTgsImV4cCI6MTc1MTcwNzc5OH0.WtEN6f5AR0NvmAsxr3JwkGWxHvSiiQU1ReBLCtp8JUw'
-    );
-  };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    window.location.href = '/';
+  };
   return (
     <div className={classes['main-header']}>
       <div className={classes['header-box']}>
@@ -18,9 +24,16 @@ export default function MainHeader() {
         </Link>
       </div>
       <div className={classes['btn-container']}>
-        <Link href="/">Sign up</Link>
-        {/* <Link href="/">Log in</Link> */}
-        <button onClick={handleLogin}>Log in</button>
+        {isLoggedIn ? (
+          <button onClick={handleLogout} className={classes['logout-btn']}>
+            Logout
+          </button>
+        ) : (
+          <>
+            <Link href="/register">Sign up</Link>
+            <Link href="/login">Log in</Link>
+          </>
+        )}
       </div>
     </div>
   );
