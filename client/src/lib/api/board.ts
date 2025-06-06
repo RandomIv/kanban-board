@@ -1,5 +1,6 @@
 import { useBoardStore } from '@/store/boardStore';
 import { List } from '@/types/List';
+import { apiUrl } from '@/utils/api';
 
 const colors = ['#31363F', '#FF9F00', '#F4631E', '#309898'];
 const setBoardState = useBoardStore.getState().setBoardState;
@@ -8,7 +9,7 @@ const createNewBoard = async (title: string | undefined) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No auth token');
 
-  const res = await fetch('http://localhost:5006/api/boards', {
+  const res = await fetch(apiUrl('/boards'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -18,15 +19,14 @@ const createNewBoard = async (title: string | undefined) => {
   });
 
   if (!res.ok) throw new Error('Failed to create board');
-
-  return await res.json();
+  return res.json();
 };
 
 const fetchBoardData = async (boardId: string) => {
   const setBoardData = useBoardStore.getState().setBoardData;
   const setLists = useBoardStore.getState().setLists;
 
-  const res = await fetch(`http://localhost:5006/api/boards/${boardId}`);
+  const res = await fetch(apiUrl(`/boards/${boardId}`));
   if (!res.ok) throw new Error('Board not found');
 
   const data = await res.json();
@@ -56,7 +56,7 @@ const fetchBoardData = async (boardId: string) => {
 const fetchUserBoards = async () => {
   const token = localStorage.getItem('token');
 
-  const res = await fetch('http://localhost:5006/api/boards', {
+  const res = await fetch(apiUrl('/boards'), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const fetchUserBoards = async () => {
 
 const deleteBoard = async (boardId: string) => {
   const token = localStorage.getItem('token');
-  const res = await fetch(`http://localhost:5006/api/boards/${boardId}`, {
+  const res = await fetch(apiUrl(`/boards/${boardId}`), {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -80,8 +80,7 @@ const deleteBoard = async (boardId: string) => {
     },
   });
 
-  if (!res.ok) throw new Error('Cannot fetch your boards');
-
+  if (!res.ok) throw new Error('Cannot delete your board');
   return { status: 'ok' };
 };
 
@@ -91,7 +90,7 @@ const changeBoard = async (boardId: string, newTitle: string) => {
 
   setBoardState('fetching');
 
-  const res = await fetch(`http://localhost:5006/api/boards/${boardId}`, {
+  const res = await fetch(apiUrl(`/boards/${boardId}`), {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -102,11 +101,10 @@ const changeBoard = async (boardId: string, newTitle: string) => {
 
   if (!res.ok) {
     setBoardState('error');
-    throw new Error('Failed to create board');
-  } else {
-    setBoardState('up-to-date');
+    throw new Error('Failed to update board');
   }
 
+  setBoardState('up-to-date');
   return await res.json();
 };
 

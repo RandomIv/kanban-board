@@ -1,4 +1,5 @@
 import { useBoardStore } from '@/store/boardStore';
+import { apiUrl } from '@/utils/api';
 
 const setBoardState = useBoardStore.getState().setBoardState;
 
@@ -8,7 +9,7 @@ const createCard = async (title: string, listId: string) => {
 
   setBoardState('fetching');
 
-  const res = await fetch('http://localhost:5006/api/cards', {
+  const res = await fetch(apiUrl('/cards'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -19,12 +20,11 @@ const createCard = async (title: string, listId: string) => {
 
   if (!res.ok) {
     setBoardState('error');
-    throw new Error('Failed to create board');
-  } else {
-    setBoardState('up-to-date');
+    throw new Error('Failed to create card');
   }
 
-  return await res.json();
+  setBoardState('up-to-date');
+  return res.json();
 };
 
 const deleteCard = async (cardId: string) => {
@@ -32,7 +32,7 @@ const deleteCard = async (cardId: string) => {
 
   setBoardState('fetching');
 
-  const res = await fetch(`http://localhost:5006/api/cards/${cardId}`, {
+  const res = await fetch(apiUrl(`/cards/${cardId}`), {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -42,11 +42,10 @@ const deleteCard = async (cardId: string) => {
 
   if (!res.ok) {
     setBoardState('error');
-    throw new Error('Cannot delete your card');
-  } else {
-    setBoardState('up-to-date');
+    throw new Error('Failed to delete card');
   }
 
+  setBoardState('up-to-date');
   return { status: 'ok' };
 };
 
