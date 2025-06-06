@@ -16,17 +16,15 @@ export default function List({ id, color, title, cards }: ListProps) {
   return (
     <div className={classes['list']}>
       <h3 style={{ borderColor: color }}>{title}</h3>
-      <div className={classes.cards}>
-        {cards.map((card) => (
-          <CardItem
-            key={card.id}
-            id={card.id}
-            listId={id}
-            color={color}
-            data={card}
-          />
-        ))}
-      </div>
+      {cards.map((card) => (
+        <CardItem
+          key={card.id}
+          id={card.id}
+          listId={id}
+          color={color}
+          data={card}
+        />
+      ))}
       <button onClick={addCard}>
         <FontAwesomeIcon icon={faPlus} />
       </button>
