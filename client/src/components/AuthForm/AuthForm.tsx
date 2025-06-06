@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './authForm.module.css';
+import styles from './AuthForm.module.css';
 import { useState } from 'react';
 
 type Props = {
