@@ -1,5 +1,7 @@
+// 🔄 Спочатку оголошуємо мок
 const mockSetBoardState = jest.fn();
 
+// 🧪 Потім — мокаємо store, бо він імпортується всередині card.ts
 jest.mock('@/store/boardStore', () => ({
   useBoardStore: {
     getState: () => ({
@@ -8,6 +10,7 @@ jest.mock('@/store/boardStore', () => ({
   },
 }));
 
+// 🟢 Тільки потім імпортуємо card API, бо воно одразу використовує useBoardStore
 import { createCard, deleteCard } from '../api/card';
 
 global.fetch = jest.fn();
@@ -44,7 +47,7 @@ describe('API Card functions', () => {
     (global.localStorage.getItem as jest.Mock).mockReturnValueOnce(null);
 
     await expect(createCard('NoTokenCard', 'list123')).rejects.toThrow(
-      'No auth token'
+      'No auth token',
     );
   });
 
@@ -52,7 +55,7 @@ describe('API Card functions', () => {
     (fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
 
     await expect(createCard('BadCard', 'list123')).rejects.toThrow(
-      'Failed to create board'
+      'Failed to create card',
     );
     expect(mockSetBoardState).toHaveBeenCalledWith('error');
   });
@@ -71,7 +74,7 @@ describe('API Card functions', () => {
     (fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
 
     await expect(deleteCard('card123')).rejects.toThrow(
-      'Cannot delete your card'
+      'Failed to delete card',
     );
     expect(mockSetBoardState).toHaveBeenCalledWith('error');
   });
