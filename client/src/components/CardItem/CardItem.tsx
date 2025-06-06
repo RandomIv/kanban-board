@@ -109,7 +109,7 @@ export default function CardItem({ id, listId, color, data }: Props) {
       onDoubleClick={handleDoubleClick}
     >
       {showMenu && (
-        <div ref={cardMenuRef}>
+        <div ref={cardMenuRef} className={classes['card-menu-wrapper']}>
           <CardMenu
             cardId={id}
             listId={listId}
@@ -117,7 +117,6 @@ export default function CardItem({ id, listId, color, data }: Props) {
           />
         </div>
       )}
-
       <div className={classes['card-header']}>
         <input
           ref={inputRef}
