@@ -9,14 +9,6 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 
 jest.mock('bcrypt');
 
-const mockUser: User = {
-  id: '1',
-  email: 'test@example.com',
-  password: 'hashedpassword',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
 const mockUserWithoutPassword: UserWithoutPassword = {
   id: '1',
   email: 'test@example.com',
