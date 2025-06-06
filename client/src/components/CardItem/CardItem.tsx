@@ -108,19 +108,17 @@ export default function CardItem({ id, listId, color, data }: Props) {
       onContextMenu={handleRightClick}
       onDoubleClick={handleDoubleClick}
     >
-      <div className={classes['card-header']}>
-        {showMenu && (
-          <div ref={cardMenuRef}>
-            <CardMenu
-              cardId={id}
-              listId={listId}
-              onChange={(date) =>
-                onChange({ id: data.id, newTargetDate: date })
-              }
-            />
-          </div>
-        )}
+      {showMenu && (
+        <div ref={cardMenuRef}>
+          <CardMenu
+            cardId={id}
+            listId={listId}
+            onChange={(date) => onChange({ id: data.id, newTargetDate: date })}
+          />
+        </div>
+      )}
 
+      <div className={classes['card-header']}>
         <input
           ref={inputRef}
           type="text"
